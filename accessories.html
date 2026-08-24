@@ -353,21 +353,21 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
     min-width:0;
   }
 
-  /* Pull tab relocates to a small tab at the top-right of the screen */
+  /* Pull tab now peeks down from the TOP edge, centered — the same
+     half-off-canvas diamond peg as the desktop version, just rotated
+     onto the top edge instead of the left edge. */
   .menu-tab{
-    left:auto;
-    right:18px;
-    top:18px;
-    width:56px;
-    height:56px;
-    transform:rotate(45deg);
+    left:50%;
+    right:auto;
+    top:-46px;
+    transform:translateX(-50%) rotate(45deg);
+    transition:top .35s ease;
   }
   .menu-tab:hover{
-    left:auto;
-    right:18px;
-    top:18px;
+    left:50%;
+    right:auto;
+    top:-38px;
   }
-  .menu-tab .tab-glyph{ width:12px; height:12px; }
 
   /* The sideways-travelling rolled-rug effect only makes sense sliding
      horizontally; hide it on mobile so the menu just drops open. */
