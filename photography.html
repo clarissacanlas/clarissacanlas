@@ -357,6 +357,76 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   margin:0 auto;
 }
 
+/* ================= MOBILE LAYOUT (auto-detected via viewport width) =================
+   Below this breakpoint the menu drops down from the TOP of the screen instead of
+   sliding in from the left. The JS toggle logic is unchanged — only how "open"
+   looks is redefined here. */
+@media (max-width: 768px){
+
+  body{
+    min-width:0;
+  }
+
+  /* Pull tab relocates to a small tab at the top-right of the screen */
+  .menu-tab{
+    left:auto;
+    right:18px;
+    top:18px;
+    width:56px;
+    height:56px;
+    transform:rotate(45deg);
+  }
+  .menu-tab:hover{
+    left:auto;
+    right:18px;
+    top:18px;
+  }
+  .menu-tab .tab-glyph{ width:12px; height:12px; }
+
+  /* The sideways-travelling rolled-rug effect only makes sense sliding
+     horizontally; hide it on mobile so the menu just drops open. */
+  .roll{ display:none; }
+
+  /* Menu drawer now unfurls DOWN from the top edge, full width, instead of
+     sliding in from the left edge. */
+  .sidebar{
+    top:0;
+    left:0;
+    width:100%;
+    height:0;
+    transition:height .6s cubic-bezier(.76,0,.24,1);
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+  }
+  .sidebar.open{
+    width:100%;
+    height:auto;
+    max-height:82vh;
+    overflow-y:auto;
+  }
+  .sidebar-inner{
+    width:100%;
+    height:auto;
+    padding:70px 28px 32px;
+  }
+
+  .main{
+    padding:110px 24px 60px;
+    align-items:flex-start;
+  }
+  .panel{ max-width:100%; }
+
+  .about-image-wrap{
+    width:100%;
+    max-width:340px;
+    height:auto;
+  }
+
+  /* Photography's side-by-side gallery stacks on narrow screens */
+  .images-gallery{
+    flex-wrap:wrap;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -500,9 +570,13 @@ function toggleMenu(){
 menuTab.addEventListener('click', toggleMenu);
 scrim.addEventListener('click', closeMenu);
 
-/* unfurl open automatically on page load */
+/* unfurl open automatically on page load — desktop only.
+   On mobile the drop-down menu would cover the whole screen, so it
+   starts closed and the user taps the tab to open it. */
 window.addEventListener('load', () => {
-  setTimeout(openMenu, 450);
+  if (window.innerWidth > 768) {
+    setTimeout(openMenu, 450);
+  }
 });
 </script>
 
