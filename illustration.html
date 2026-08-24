@@ -246,7 +246,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   background-attachment:fixed;
   display:flex;
   align-items:center;
-  padding:80px 100px 80px 140px;
+  padding:80px 192px 80px 140px;
   z-index:1;
 }
 
@@ -350,8 +350,11 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   margin-bottom:26px;
 }
 
+/* Desktop only: the divider line above the media row is removed —
+   see the min-width:769px block further down. Mobile keeps it. */
+
 .work-piece{
-  max-width:900px;
+  width:100%;
 }
 
 .work-media-row{
@@ -373,7 +376,14 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   font-weight:300;
   font-size:18px;
   line-height:1.75;
-  color:var(--bone-dim);
+  color:var(--bone);
+}
+
+/* Desktop only: drop the accent-rule divider above the media row */
+@media (min-width:769px){
+  .work-piece .accent-rule{
+    display:none;
+  }
 }
 
 /* ================= MOBILE LAYOUT (auto-detected via viewport width) =================
