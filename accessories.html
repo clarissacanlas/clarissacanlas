@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <title>Accessories</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,400;1,9..144,500&family=Space+Mono:wght@400;700&display=swap');
+@font-face{font-family:'Quantico';src:url('fonts/Quantico-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Quantico';src:url('fonts/Quantico-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Quantico';src:url('fonts/Quantico-Italic.ttf') format('truetype');font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:'Quantico';src:url('fonts/Quantico-BoldItalic.ttf') format('truetype');font-weight:700;font-style:italic;font-display:swap;}
 
 :root{
   --ink:#141210;
@@ -21,7 +24,7 @@
 html,body{height:100%;}
 
 body{
-  font-family:'Space Mono',monospace;
+  font-family:'Quantico',sans-serif;
   background:var(--ink);
   color:var(--bone);
   min-width:1000px;
@@ -195,7 +198,7 @@ nav a .medallion{
 }
 
 nav a .label-en{
-  font-family:'Fraunces',serif;
+  font-family:'Quantico',sans-serif;
   font-style:italic;
   font-weight:400;
   font-size:20px;
@@ -260,7 +263,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 }
 
 .panel h1{
-  font-family:'Fraunces',serif;
+  font-family:'Quantico',sans-serif;
   font-weight:400;
   font-style:italic;
   font-size:clamp(48px,6vw,84px);
@@ -276,7 +279,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 }
 
 .panel p.copy{
-  font-family:'Fraunces',serif;
+  font-family:'Quantico',sans-serif;
   font-style:normal;
   font-weight:300;
   font-size:19px;
@@ -304,7 +307,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 }
 
 .about-name{
-  font-family:'Fraunces',serif;
+  font-family:'Quantico',sans-serif;
   font-weight:400;
   font-style:italic;
   font-size:clamp(40px,5vw,64px);
