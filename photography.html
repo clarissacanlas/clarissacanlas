@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Portfolio</title>
+<title>Photography</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,400;1,9..144,500&family=Space+Mono:wght@400;700&display=swap');
 
@@ -307,21 +307,36 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   margin-right:auto;
 }
 
-.about-image-wrap{
-  width:220px;
-  height:220px;
-  margin:0 auto 34px;
-  border:1.4px solid var(--brass);
-  padding:6px;
-  box-shadow:0 12px 30px rgba(0,0,0,.4);
+/* Container: Forces single-row alignment */
+.images-gallery {
+  display: flex;
+  flex-wrap: nowrap;      /* STRICTLY prevents dropping to a second row */
+  justify-content: center;
+  align-items: center;    /* Vertically aligns different aspect ratios */
+  gap: 16px;              /* Space between images */
+  width: 100%;
+  margin-bottom: 34px;
 }
 
-.about-image{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  background:rgba(236,228,210,.06);
+/* Individual Frame */
+.about-image-wrap {
+  flex: 1 1 0%;           /* Forces both frames to share row space equally */
+  min-width: 0;           /* Prevents oversized images from breaking the row */
+  max-width: 320px;       /* Keeps boxes from becoming unnaturally wide */
+  border: 1.4px solid var(--brass);
+  padding: 6px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.4);
+  background: rgba(236,228,210,.06);
+}
+
+/* Image Behavior */
+.about-image {
+  width: 100%;
+  height: auto;
+  max-height: 450px;      /* Caps vertical height so ultra-tall images don't overflow */
+  object-fit: contain;    /* Preserves full image without cropping/stretching */
+  display: block;
+  margin: 0 auto;
 }
 
 .about-desc{
@@ -398,35 +413,39 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 
 <main class="main">
 
-  <!-- ===== ABOUT / HOME PANEL ===== -->
-  <div class="panel panel-about" id="panel-about">
+    <article class="work-piece">
 
-    <!-- 1) PASTE YOUR NAME HERE (replace "Your Name") -->
-    <h1 class="about-name" id="about-name">Clarissa Canlas</h1>
+        <!-- PASTE THE NAME OF YOUR PIECE HERE -->
+        <h2>Chainmaille Handpiece</h2>
+        <h4>June 2025</h4>
+        <h4>Watercolor, fineliner pens, and colored pencil</h4>
+        <h4>iPhone 12 camera, fisheye lens clip, Adobe Lightroom</h4>
 
-    <div class="accent-rule accent-rule-center" style="background:var(--brass);"></div>
+        <div class="accent-rule accent-rule-center" style="background:var(--brass);"></div>
+  
+        <!-- PASTE YOUR IMAGE PATH INTO src="".
+             Example: src="media/illustration/drawing1.jpg"
+             -->
 
-    <!-- 2) PASTE YOUR IMAGE HERE — replace the src="" below with your image path -->
-    <div class="about-image-wrap">
-      <img id="about-image" class="about-image" src="media/selfie.jpg" alt="Your Name">
-    </div>
-
-    <!-- 3) PASTE YOUR DESCRIPTION HERE (replace the paragraph text below) -->
-    <p class="copy about-desc" id="about-desc">
-      Welcome to my portfolio website. I am currently doing the Media Arts and Technology minor at UCSB, and this is my project for the capstone. I am also double majoring in Data Science and Copmutational Linguistics, and this is the start of my creative pursuits!
-    </p>
-  </div>
-
-  <!-- ===== WORK PANEL (Illustration / Accessories / Photography) ===== -->
-  <div class="panel panel-work" id="panel-work" style="display:none;">
-    <h1 id="panel-title">Illustration</h1>
-    <div class="accent-rule" id="panel-rule" style="background:var(--rug-red);"></div>
-    <p class="copy" id="panel-copy">Placeholder copy for this section.</p>
-    <div class="meta">
-      <div>Medium <span id="panel-medium">&mdash;</span></div>
-      <div>Year <span id="panel-year">&mdash;</span></div>
-    </div>
-  </div>
+    <div class="images-gallery">
+        <div class="about-image-wrap">
+          <img class="about-image" src="media/canlas_hands_01.jpeg" alt="colorful distorted illustration">
+        </div>
+        <div class="about-image-wrap">
+          <img class="about-image" src="media/canlas_hands_02.jpeg" alt="olorful distorted photo">
+        </div>
+      </div>
+  
+        <!-- NORMAL DESCRIPTION UNDER THE IMAGE -->
+        <div class="work-description">
+            These joint pieces culminate in a project centered on self-portraiture. The depicted hands are my own, 
+            with the intention of conveying my interiority through my exteriority. Since childhood, I've had the 
+            bad habit of picking at my nails when feeling anxious, and I sought to capture the weird/distorted nature 
+            of my damaged fingers. In both realms of photography and illustration, realism was not my priority; moreso 
+            the process focused on explorations in color and shape.
+        </div>
+  
+      </article>
 
 </main>
 
