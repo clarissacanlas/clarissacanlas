@@ -343,6 +343,39 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   margin:0 auto;
 }
 
+/* ---------- WORK PIECE: image left, description right (desktop) ---------- */
+.work-piece .accent-rule{
+  width:64px;
+  height:2px;
+  margin-bottom:26px;
+}
+
+.work-piece{
+  max-width:900px;
+}
+
+.work-media-row{
+  display:flex;
+  align-items:flex-start;
+  gap:48px;
+}
+
+.work-media-row .about-image-wrap{
+  margin:0;
+  flex:none;
+}
+
+.work-description{
+  flex:1;
+  min-width:0;
+  text-align:left;
+  font-family:'Quantico',sans-serif;
+  font-weight:300;
+  font-size:18px;
+  line-height:1.75;
+  color:var(--bone-dim);
+}
+
 /* ================= MOBILE LAYOUT (auto-detected via viewport width) =================
    Below this breakpoint the menu drops down from the TOP of the screen instead of
    sliding in from the left. The JS toggle logic is unchanged — only how "open"
@@ -406,6 +439,11 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
     max-width:340px;
     height:auto;
   }
+
+  /* Desktop-only image-left/text-right row collapses back to stacked
+     image-then-text on mobile */
+  .work-piece{ max-width:100%; }
+  .work-media-row{ flex-direction:column; }
 }
 
 </style>
@@ -490,16 +528,17 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
         <!-- PASTE YOUR IMAGE PATH INTO src="".
              Example: src="media/illustration/drawing1.jpg"
              -->
-        
-        <div class="about-image-wrap">
-        <img id="about-image" class="about-image" src="media/canlas_unskinned_01.jpg" alt="naked cat in white, pale pink/blue">
+        <div class="work-media-row">
+          <div class="about-image-wrap">
+          <img id="about-image" class="about-image" src="media/canlas_unskinned_01.jpg" alt="naked cat in white, pale pink/blue">
+          </div>
+
+          <!-- NORMAL DESCRIPTION NEXT TO THE IMAGE -->
+          <div class="work-description">
+            Hello Kitty is my comfort character since childhood, and she was one of the most formative symbols for my identity. In most contexts, she is presented cutely and happily, but in this illustration, I sought to portray who she is beyond her commercialized appearance. To demonstrate greater depth of character, I attempted to depict more human-like skin and facial features instead of cartoon cat organs. The overarching intention was to show that frivolous things can mean more than what is superficially perceived.
+          </div>
         </div>
-  
-        <!-- NORMAL DESCRIPTION UNDER THE IMAGE -->
-        <div class="work-description">
-          Hello Kitty is my comfort character since childhood, and she was one of the most formative symbols for my identity. In most contexts, she is presented cutely and happily, but in this illustration, I sought to portray who she is beyond her commercialized appearance. To demonstrate greater depth of character, I attempted to depict more human-like skin and facial features instead of cartoon cat organs. The overarching intention was to show that frivolous things can mean more than what is superficially perceived.
-        </div>
-  
+
       </article>
 
 </main>
