@@ -323,8 +323,9 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 }
 
 .about-image-wrap{
-  width:341px;
-  height:512px;
+  aspect-ratio:341/512;
+  width:auto;
+  height:min(54vh, 600px);
   margin:0 auto 34px;
   border:1.4px solid var(--brass);
   padding:6px;
@@ -345,13 +346,8 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 
 /* ---------- WORK PIECE: image left, description right (desktop) ---------- */
 .work-piece .accent-rule{
-  width:64px;
-  height:2px;
-  margin-bottom:26px;
+  display:none;
 }
-
-/* Desktop only: the divider line above the media row is removed —
-   see the min-width:769px block further down. Mobile keeps it. */
 
 .work-piece{
   width:100%;
@@ -361,6 +357,13 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   display:flex;
   align-items:flex-start;
   gap:48px;
+}
+
+/* Desktop only: vertically center the description against the image */
+@media (min-width:769px){
+  .work-media-row{
+    align-items:center;
+  }
 }
 
 .work-media-row .about-image-wrap{
@@ -377,13 +380,6 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   font-size:18px;
   line-height:1.75;
   color:var(--bone);
-}
-
-/* Desktop only: drop the accent-rule divider above the media row */
-@media (min-width:769px){
-  .work-piece .accent-rule{
-    display:none;
-  }
 }
 
 /* ================= MOBILE LAYOUT (auto-detected via viewport width) =================
@@ -446,7 +442,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 
   .about-image-wrap{
     width:100%;
-    max-width:340px;
+    max-width:420px;
     height:auto;
   }
 

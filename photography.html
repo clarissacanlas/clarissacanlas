@@ -337,7 +337,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 .about-image-wrap {
   flex: 1 1 0%;           /* Forces both frames to share row space equally */
   min-width: 0;           /* Prevents oversized images from breaking the row */
-  max-width: 320px;       /* Keeps boxes from becoming unnaturally wide */
+  max-width: 460px;       /* Keeps boxes from becoming unnaturally wide */
   border: 1.4px solid var(--brass);
   padding: 6px;
   box-shadow: 0 12px 30px rgba(0,0,0,.4);
@@ -348,7 +348,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 .about-image {
   width: 100%;
   height: auto;
-  max-height: 450px;      /* Caps vertical height so ultra-tall images don't overflow */
+  max-height: min(46vh, 560px); /* Scales with viewport height so it never forces a scroll */
   object-fit: contain;    /* Preserves full image without cropping/stretching */
   display: block;
   margin: 0 auto;
@@ -418,7 +418,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 
   .about-image-wrap{
     width:100%;
-    max-width:340px;
+    max-width:420px;
     height:auto;
   }
 

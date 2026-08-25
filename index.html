@@ -275,7 +275,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 
 .panel .accent-rule{
   width:64px;height:2px;
-  margin-bottom:26px;
+  margin-bottom:18px;
   transition:background .4s ease;
 }
 
@@ -314,7 +314,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   font-size:clamp(40px,5vw,64px);
   line-height:1.05;
   color:var(--bone);
-  margin-bottom:22px;
+  margin-bottom:16px;
 }
 
 .accent-rule-center{
@@ -323,9 +323,10 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 }
 
 .about-image-wrap{
-  width:220px;
-  height:220px;
-  margin:0 auto 34px;
+  aspect-ratio:1/1;
+  width:auto;
+  height:min(26vh, 320px);
+  margin:0 auto 22px;
   border:1.4px solid var(--brass);
   padding:6px;
   box-shadow:0 12px 30px rgba(0,0,0,.4);
@@ -403,7 +404,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 
   .about-image-wrap{
     width:100%;
-    max-width:340px;
+    max-width:420px;
     height:auto;
   }
 }
