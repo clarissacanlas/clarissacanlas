@@ -333,24 +333,27 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   margin-bottom: 34px;
 }
 
-/* Individual Frame */
+/* Individual Frame — hugs each image's own rendered size instead of
+   stretching to an equal-width box, so the border fits each photo's
+   actual aspect ratio rather than leaving mismatched empty padding. */
 .about-image-wrap {
-  flex: 1 1 0%;           /* Forces both frames to share row space equally */
-  min-width: 0;           /* Prevents oversized images from breaking the row */
-  max-width: 460px;       /* Keeps boxes from becoming unnaturally wide */
+  flex: 0 1 auto;
+  min-width: 0;            /* lets flex-shrink kick in if the row is too narrow */
   border: 1.4px solid var(--brass);
   padding: 6px;
   box-shadow: 0 12px 30px rgba(0,0,0,.4);
   background: rgba(236,228,210,.06);
 }
 
-/* Image Behavior */
+/* Image Behavior — width is auto-derived from the height cap and the
+   image's own intrinsic aspect ratio, so the frame hugs the image. */
 .about-image {
-  width: 100%;
-  height: auto;
-  max-height: min(46vh, 560px); /* Scales with viewport height so it never forces a scroll */
-  object-fit: contain;    /* Preserves full image without cropping/stretching */
   display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(48vh, 560px); /* Scales with viewport height so it never forces a scroll */
+  object-fit: contain;
   margin: 0 auto;
 }
 
@@ -416,10 +419,16 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   }
   .panel{ max-width:100%; }
 
+  /* Wrap hugs each image's own rendered size (no forced full-width
+     box) so the border fits the photo instead of leaving empty
+     padding on the sides */
   .about-image-wrap{
-    width:100%;
-    max-width:420px;
+    width:auto;
+    max-width:100%;
     height:auto;
+  }
+  .about-image{
+    max-height:min(42vh, 480px);
   }
 
   /* Photography's side-by-side gallery stacks one image after another
@@ -428,6 +437,59 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
     flex-direction:column;
     align-items:center;
   }
+}
+
+/* ---------- IMAGE LIGHTBOX (click any image for a fullscreen view) ---------- */
+.about-image{
+  cursor: zoom-in;
+}
+
+.lightbox-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(6,5,4,.92);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:60px;
+  z-index:200;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+}
+.lightbox-overlay.open{
+  opacity:1;
+  pointer-events:auto;
+}
+.lightbox-overlay img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  cursor:default;
+}
+.lightbox-close{
+  position:fixed;
+  top:24px;
+  right:24px;
+  width:44px;
+  height:44px;
+  border:1.4px solid var(--brass);
+  background:rgba(20,18,16,.75);
+  color:var(--bone);
+  font-family:'Quantico',sans-serif;
+  font-size:22px;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:201;
+  transition:background .3s ease, color .3s ease;
+}
+.lightbox-close:hover{
+  background:var(--brass);
+  color:var(--ink);
 }
 
 </style>
@@ -536,6 +598,12 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 
 </main>
 
+<!-- Fullscreen image viewer: click any image to open, X (or Esc) to close -->
+<div class="lightbox-overlay" id="lightbox-overlay">
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close fullscreen image">&times;</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
 <script>
 
 
@@ -580,6 +648,30 @@ window.addEventListener('load', () => {
   if (window.innerWidth > 768) {
     setTimeout(openMenu, 450);
   }
+});
+
+/* ---------- IMAGE LIGHTBOX ---------- */
+const lightboxOverlay = document.getElementById('lightbox-overlay');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxClose = document.getElementById('lightbox-close');
+
+document.querySelectorAll('.about-image').forEach(img => {
+  img.addEventListener('click', () => {
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+    lightboxOverlay.classList.add('open');
+  });
+});
+
+function closeLightbox(){
+  lightboxOverlay.classList.remove('open');
+}
+lightboxClose.addEventListener('click', closeLightbox);
+lightboxOverlay.addEventListener('click', (e) => {
+  if (e.target === lightboxOverlay) { closeLightbox(); }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { closeLightbox(); }
 });
 </script>
 
