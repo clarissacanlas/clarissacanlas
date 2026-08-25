@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Photography</title>
+<link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="media/favicon-48.png">
+<link rel="shortcut icon" href="favicon.ico">
 <style>
 @font-face{font-family:'Quantico';src:url('fonts/Quantico-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap;}
 @font-face{font-family:'Quantico';src:url('fonts/Quantico-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap;}
@@ -30,6 +34,13 @@ body{
   color:var(--bone);
   min-width:1000px;
   overflow-x:auto;
+}
+
+/* Custom fleur-de-lis cursor — desktop only (mobile is touch, no pointer).
+   Interactive elements that already set their own cursor (buttons, the
+   lightbox zoom, etc.) keep their affordance and aren't affected. */
+@media (min-width: 769px){
+  body{ cursor:url('media/cursor-fleur.png') 16 16, auto; }
 }
 
 /* ---------- PULL TAB (fixed peg, always visible) ---------- */
