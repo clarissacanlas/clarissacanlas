@@ -235,10 +235,11 @@ nav a .label-en{
   font-family:'Quantico',sans-serif;
   font-style:italic;
   font-weight:400;
-  font-size:20px;
+  font-size:17px;
   letter-spacing:0;
   text-transform:none;
   display:block;
+  white-space:nowrap;
 }
 
 nav li[data-accent="red"] a:hover .medallion,
@@ -353,6 +354,14 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 .accent-rule-center{
   margin-left:auto;
   margin-right:auto;
+}
+
+/* The piece needs its full width available (not just shrink-to-fit
+   around the title) so the gallery's justify-content:center below
+   actually centers the photo+video on the page rather than centering
+   within a box that's already only as wide as its own content. */
+.work-piece{
+  width:100%;
 }
 
 /* Container: Forces single-row alignment */
