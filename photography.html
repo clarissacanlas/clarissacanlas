@@ -420,7 +420,11 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
     height:34px;
     transition:top .6s cubic-bezier(.76,0,.24,1), height .6s cubic-bezier(.76,0,.24,1);
   }
-  .roll.open{ top:82vh; height:14px; }
+  /* top is set dynamically via --roll-open-top (JS measures the sidebar's
+     actual rendered height so the roll lands exactly at the rug's real
+     bottom edge, not a hardcoded viewport fraction that can mismatch the
+     drawer's true (content-based) height). */
+  .roll.open{ top:var(--roll-open-top, 82vh); height:14px; }
 
   .roll-body{
     background:
@@ -674,7 +678,23 @@ function startSpin(){
   spinTimeout = setTimeout(() => roll.classList.remove('spinning'), spinDuration);
 }
 
+/* On mobile the drawer's open height is content-based (not a fixed
+   viewport fraction), so measure the sidebar's actual rendered height
+   and feed it to the roll bar as its travel target — this keeps the
+   roll's stopping point locked to the rug's real bottom edge instead
+   of an guessed 82vh that can leave it floating past the content or
+   short of it. */
+function syncRollOpenTop(){
+  if (window.innerWidth > 768) return;
+  const inner = sidebar.querySelector('.sidebar-inner');
+  const maxH = window.innerHeight * 0.82;
+  const contentH = inner ? inner.scrollHeight : maxH;
+  const finalH = Math.min(contentH, maxH);
+  roll.style.setProperty('--roll-open-top', finalH + 'px');
+}
+
 function openMenu(){
+  syncRollOpenTop();
   sidebar.classList.add('open');
   roll.classList.add('open');
   menuTab.classList.add('open');
