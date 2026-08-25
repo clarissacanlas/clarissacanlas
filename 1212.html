@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1212</title>
+<link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="media/favicon-48.png">
+<link rel="shortcut icon" href="favicon.ico">
+<style>
+@font-face{font-family:'Quantico';src:url('fonts/Quantico-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Quantico';src:url('fonts/Quantico-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Quantico';src:url('fonts/Quantico-Italic.ttf') format('truetype');font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:'Quantico';src:url('fonts/Quantico-BoldItalic.ttf') format('truetype');font-weight:700;font-style:italic;font-display:swap;}
+
+:root{
+  --ink:#141210;
+  --bone:#ece4d2;
+  --bone-dim:#b7ac93;
+  --rug-red:#8a3230;
+  --brass:#b3915f;
+  --indigo:#2e3a58;
+  --scrim:rgba(10,8,6,.62);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html,body{height:100%;}
+
+body{
+  font-family:'Quantico',sans-serif;
+  background:var(--ink);
+  color:var(--bone);
+  min-width:1000px;
+  overflow-x:auto;
+}
+
+/* Custom fleur-de-lis cursor — desktop only (mobile is touch, no pointer).
+   Interactive elements that already set their own cursor (buttons, the
+   lightbox zoom, etc.) keep their affordance and aren't affected. */
+@media (min-width: 769px){
+  body{ cursor:url('media/cursor-fleur.png') 16 16, auto; }
+}
+
+/* ---------- PULL TAB (fixed peg, always visible) ---------- */
+.menu-tab{
+  position:fixed;
+  left:-46px;
+  top:50%;
+  width:92px;
+  height:92px;
+  background:linear-gradient(135deg,#3a2f22,#241b13 55%,#140f0a);
+  box-shadow:6px 6px 22px rgba(0,0,0,.55), inset -1px -1px 0 rgba(179,145,95,.35);
+  z-index:22;
+  cursor:pointer;
+  transform:translateY(-50%) rotate(45deg);
+  transition:left .35s ease;
+}
+
+.menu-tab:hover{ left:-38px; }
+
+.menu-tab-inner{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:rotate(-45deg);
+}
+
+.menu-tab .tab-glyph{
+  width:16px;height:16px;
+  border:1.3px solid var(--brass);
+  transform:rotate(45deg);
+  transition:transform .6s ease, background .3s ease;
+}
+
+.menu-tab.open .tab-glyph{
+  transform:rotate(225deg);
+  background:var(--brass);
+}
+
+/* ---------- SCRIM ---------- */
+.scrim{
+  position:fixed;
+  inset:0;
+  background:rgba(6,5,4,.55);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .7s ease;
+  z-index:15;
+}
+.scrim.open{opacity:1;pointer-events:auto;}
+
+/* ---------- 3D ROLL (the rolled-up rug, unrolls like a real cylinder:
+   it thins out and spins around its own axis as it travels, instead
+   of just sliding sideways with an unrelated wobble) ---------- */
+.roll{
+  position:fixed;
+  top:0;left:0;
+  width:34px;
+  height:100vh;
+  z-index:19;
+  transition:left .95s cubic-bezier(.76,0,.24,1), width .95s cubic-bezier(.76,0,.24,1);
+  perspective:900px;
+}
+.roll.open{ left:340px; width:14px; }
+
+.roll-body{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,
+      rgba(0,0,0,.6) 0%, rgba(255,255,255,.32) 22%, rgba(255,255,255,.04) 46%,
+      rgba(0,0,0,.28) 68%, rgba(0,0,0,.62) 100%),
+    repeating-linear-gradient(0deg,
+      var(--ink) 0px, var(--ink) 1.6px,
+      var(--bone-dim) 1.6px, var(--bone-dim) 3px,
+      var(--bone) 3px, var(--bone) 4.6px,
+      var(--ink) 4.6px, var(--ink) 6.2px);
+  background-blend-mode:overlay, normal;
+  box-shadow:inset 0 0 10px rgba(0,0,0,.5), 2px 0 8px rgba(0,0,0,.4);
+  opacity:.94;
+}
+
+/* Rotation around the roll's own (vertical) axis, timed to match the
+   slide exactly so the spin reads as what's driving the motion. */
+.roll.spinning .roll-body{ animation:rollSpinY .95s cubic-bezier(.45,0,.55,1); }
+
+@keyframes rollSpinY{
+  0%   { transform:rotateY(0deg) scaleX(1); }
+  50%  { transform:rotateY(540deg) scaleX(.82); }
+  100% { transform:rotateY(1080deg) scaleX(1); }
+}
+
+/* ---------- SIDEBAR DRAWER (the flat unrolled rug, revealed by width) ---------- */
+.sidebar{
+  position:fixed;
+  top:0;left:0;
+  width:0;
+  height:100vh;
+  overflow:hidden;
+  z-index:18;
+  transition:width .95s cubic-bezier(.76,0,.24,1);
+  box-shadow:10px 0 34px rgba(0,0,0,.5);
+}
+
+.sidebar.open{ width:340px; }
+
+.sidebar-inner{
+  width:340px;
+  height:100%;
+  position:relative;
+  background-color:#5a2220;
+  background-image:
+    linear-gradient(180deg, var(--scrim) 0%, rgba(10,8,6,.32) 40%, rgba(10,8,6,.48) 70%, var(--scrim) 100%),
+    url("media/enhanced_ArmenianRug.png");
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:52px 40px 52px 56px;
+}
+
+/* fringe framing the top and bottom edges of the unrolled rug */
+.sidebar-fringe{
+  position:absolute;
+  left:0;right:0;
+  height:14px;
+  background:repeating-linear-gradient(90deg,
+    var(--ink) 0px, var(--ink) 1.3px,
+    var(--bone-dim) 1.3px, var(--bone-dim) 2.6px,
+    transparent 2.6px, transparent 5.2px);
+  opacity:.75;
+  z-index:1;
+  transform-origin:left center;
+}
+.sidebar-fringe.top{ top:0; }
+.sidebar-fringe.bottom{ bottom:0; }
+
+/* Fringe settles into place a beat after the roll finishes passing,
+   like tassels swinging to rest instead of popping in instantly. */
+.sidebar.open .sidebar-fringe{
+  animation:fringeSettle .5s cubic-bezier(.34,1.56,.64,1) .55s backwards;
+}
+@keyframes fringeSettle{
+  0%   { transform:scaleX(.7) skewX(6deg); opacity:.35; }
+  60%  { transform:scaleX(1.04) skewX(-2deg); opacity:1; }
+  100% { transform:scaleX(1) skewX(0deg); opacity:1; }
+}
+
+.sidebar-top .rule{
+  width:36px;
+  height:1px;
+  background:var(--brass);
+  opacity:.8;
+}
+
+/* ---------- NAV ---------- */
+nav ul{list-style:none;}
+
+nav li{margin-bottom:30px;}
+
+.nav-about{margin-bottom:8px;}
+
+.nav-divider{
+  width:100%;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--brass) 50%, transparent);
+  opacity:.4;
+  margin-bottom:34px;
+}
+
+nav a{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  text-decoration:none;
+  color:var(--bone);
+  transition:color .35s ease;
+}
+
+nav a .medallion{
+  flex:none;
+  width:20px;height:20px;
+  transform:rotate(45deg);
+  border:1.4px solid var(--brass);
+  transition:background .35s ease, box-shadow .35s ease, transform .5s ease;
+}
+
+nav a .label-en{
+  font-family:'Quantico',sans-serif;
+  font-style:italic;
+  font-weight:400;
+  font-size:20px;
+  letter-spacing:0;
+  text-transform:none;
+  display:block;
+}
+
+nav li[data-accent="red"] a:hover .medallion,
+nav li[data-accent="red"] a.active .medallion{background:var(--rug-red);box-shadow:0 0 14px rgba(138,50,48,.7);border-color:var(--rug-red);}
+nav li[data-accent="brass"] a:hover .medallion,
+nav li[data-accent="brass"] a.active .medallion{background:var(--brass);box-shadow:0 0 14px rgba(179,145,95,.7);border-color:var(--brass);}
+nav li[data-accent="indigo"] a:hover .medallion,
+nav li[data-accent="indigo"] a.active .medallion{background:var(--indigo);box-shadow:0 0 14px rgba(46,58,88,.9);border-color:#7683ab;}
+
+nav a:hover .medallion{transform:rotate(225deg);}
+nav a.active .medallion{transform:rotate(225deg);}
+
+nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
+
+.sidebar-bottom{
+  font-size:10px;
+  letter-spacing:.14em;
+  color:var(--bone-dim);
+  line-height:1.8;
+}
+.sidebar-bottom .rule{
+  width:36px;height:1px;background:var(--brass);opacity:.6;margin-bottom:14px;
+}
+
+/* ---------- MAIN ---------- */
+/* Default / dark-mode: black leather. Follows the OS/browser color-scheme
+   preference automatically via the media query below. */
+.main{
+  margin-left:0;
+  min-height:100vh;
+  position:relative;
+  background-color:#161110;
+  background-image:
+    linear-gradient(180deg, rgba(8,9,10,.55), rgba(8,9,10,.72)),
+    url("media/enhanced_blackLeather.png");
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  display:flex;
+  align-items:center;
+  padding:80px 100px 80px 140px;
+  z-index:1;
+}
+
+@media (prefers-color-scheme: light){
+  .main{
+    background-color:#4a1613;
+    background-image:
+      linear-gradient(180deg, rgba(20,8,6,.35), rgba(20,8,6,.55)),
+      url("media/enhanced_redLeatherOriginal.png");
+  }
+}
+
+.panel{
+  max-width:640px;
+}
+
+.panel h1{
+  font-family:'Quantico',sans-serif;
+  font-weight:400;
+  font-style:italic;
+  font-size:clamp(48px,6vw,84px);
+  line-height:1.02;
+  color:var(--bone);
+  margin-bottom:26px;
+}
+
+.panel .accent-rule{
+  width:64px;height:2px;
+  margin-bottom:26px;
+  transition:background .4s ease;
+}
+
+.panel p.copy{
+  font-family:'Quantico',sans-serif;
+  font-style:normal;
+  font-weight:300;
+  font-size:19px;
+  line-height:1.75;
+  color:var(--bone-dim);
+  max-width:46ch;
+}
+
+.panel .meta{
+  margin-top:40px;
+  display:flex;
+  gap:36px;
+  font-size:10.5px;
+  letter-spacing:.18em;
+  color:var(--bone-dim);
+  text-transform:uppercase;
+}
+.panel .meta span{display:block;color:var(--bone);margin-top:6px;letter-spacing:.05em;text-transform:none;font-size:13px;}
+
+/* ---------- ABOUT PANEL ---------- */
+.panel-about{
+  text-align:center;
+  max-width:560px;
+  margin:0 auto;
+}
+
+.about-name{
+  font-family:'Quantico',sans-serif;
+  font-weight:400;
+  font-style:italic;
+  font-size:clamp(40px,5vw,64px);
+  line-height:1.05;
+  color:var(--bone);
+  margin-bottom:22px;
+}
+
+.accent-rule-center{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* Container: Forces single-row alignment */
+.images-gallery {
+  display: flex;
+  flex-wrap: nowrap;      /* STRICTLY prevents dropping to a second row */
+  justify-content: center;
+  align-items: center;    /* Vertically aligns different aspect ratios */
+  gap: 16px;              /* Space between the image and video */
+  width: 100%;
+  margin-bottom: 34px;
+}
+
+/* Individual Frame — hugs each media item's own rendered size instead of
+   stretching to an equal-width box, so the border fits its actual
+   aspect ratio rather than leaving mismatched empty padding. */
+.about-image-wrap {
+  flex: 0 1 auto;
+  min-width: 0;            /* lets flex-shrink kick in if the row is too narrow */
+  border: 1.4px solid var(--brass);
+  padding: 6px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.4);
+  background: rgba(236,228,210,.06);
+}
+
+/* Image behavior — width is auto-derived from the height cap and the
+   image's own intrinsic aspect ratio, so the frame hugs the image. */
+.about-image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(44vh, 400px); /* Scales with viewport height so it never forces a scroll */
+  object-fit: contain;
+  margin: 0 auto;
+  cursor: zoom-in;
+}
+
+/* Video behavior — same sizing rule as .about-image (identical max-height
+   cap) so the wide 16:9 clip and the tall photo land at the exact same
+   rendered height side by side. Kept as a separate class (rather than
+   reusing .about-image) so the click-to-lightbox JS, which only targets
+   .about-image, leaves the playing video alone. */
+.about-video {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(44vh, 400px);
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.about-desc{
+  margin:0 auto;
+}
+
+/* ================= MOBILE LAYOUT (auto-detected via viewport width) =================
+   Below this breakpoint the menu drops down from the TOP of the screen instead of
+   sliding in from the left. The JS toggle logic is unchanged — only how "open"
+   looks is redefined here. */
+@media (max-width: 768px){
+
+  body{
+    min-width:0;
+  }
+
+  /* Pull tab now peeks down from the TOP edge, centered — the same
+     half-off-canvas diamond peg as the desktop version, just rotated
+     onto the top edge instead of the left edge. */
+  .menu-tab{
+    left:50%;
+    right:auto;
+    top:-46px;
+    transform:translateX(-50%) rotate(45deg);
+    transition:top .35s ease;
+  }
+  .menu-tab:hover{
+    left:50%;
+    right:auto;
+    top:-38px;
+  }
+
+  /* The roll now unrolls DOWNWARD instead of sideways: a horizontal
+     bar that travels from the top edge down to the drawer's open
+     height, spinning around its own (horizontal) axis as it goes —
+     the vertical equivalent of the desktop cylinder. */
+  .roll{
+    top:0;
+    left:0;
+    width:100%;
+    height:34px;
+    transition:top .6s cubic-bezier(.76,0,.24,1), height .6s cubic-bezier(.76,0,.24,1);
+  }
+  /* top is set dynamically via --roll-open-top (JS measures the sidebar's
+     actual rendered height so the roll lands exactly at the rug's real
+     bottom edge, not a hardcoded viewport fraction that can mismatch the
+     drawer's true (content-based) height). */
+  .roll.open{ top:var(--roll-open-top, 82vh); height:14px; }
+
+  .roll-body{
+    background:
+      linear-gradient(180deg,
+        rgba(0,0,0,.6) 0%, rgba(255,255,255,.32) 22%, rgba(255,255,255,.04) 46%,
+        rgba(0,0,0,.28) 68%, rgba(0,0,0,.62) 100%),
+      repeating-linear-gradient(90deg,
+        var(--ink) 0px, var(--ink) 1.6px,
+        var(--bone-dim) 1.6px, var(--bone-dim) 3px,
+        var(--bone) 3px, var(--bone) 4.6px,
+        var(--ink) 4.6px, var(--ink) 6.2px);
+  }
+  .roll.spinning .roll-body{ animation:rollSpinX .6s cubic-bezier(.45,0,.55,1); }
+
+  @keyframes rollSpinX{
+    0%   { transform:rotateX(0deg) scaleY(1); }
+    50%  { transform:rotateX(540deg) scaleY(.82); }
+    100% { transform:rotateX(1080deg) scaleY(1); }
+  }
+
+  /* Menu drawer now unfurls DOWN from the top edge, full width, instead
+     of sliding in from the left edge. Animates max-height (not
+     height:auto, which can't be transitioned) so the drop is actually
+     smooth and stays in sync with the roll above it. */
+  .sidebar{
+    top:0;
+    left:0;
+    width:100%;
+    height:auto;
+    max-height:0;
+    transition:max-height .6s cubic-bezier(.76,0,.24,1);
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+  }
+  .sidebar.open{
+    width:100%;
+    max-height:82vh;
+    overflow-y:auto;
+  }
+  .sidebar-inner{
+    width:100%;
+    height:auto;
+    padding:70px 28px 32px;
+  }
+
+  .main{
+    padding:110px 24px 60px;
+    align-items:flex-start;
+  }
+  .panel{ max-width:100%; }
+
+  /* Wrap hugs each media item's own rendered size (no forced full-width
+     box) so the border fits the media instead of leaving empty
+     padding on the sides */
+  .about-image-wrap{
+    width:auto;
+    max-width:100%;
+    height:auto;
+  }
+  .about-image{
+    max-height:min(38vh, 420px);
+  }
+  .about-video{
+    max-height:min(38vh, 420px);
+  }
+
+  /* Side-by-side gallery stacks the image then the video on narrow
+     screens instead of sitting side by side */
+  .images-gallery{
+    flex-direction:column;
+    align-items:center;
+  }
+}
+
+/* ---------- IMAGE LIGHTBOX (click any image for a fullscreen view) ---------- */
+.lightbox-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(6,5,4,.92);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:60px;
+  z-index:200;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+}
+.lightbox-overlay.open{
+  opacity:1;
+  pointer-events:auto;
+}
+.lightbox-overlay img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  cursor:default;
+}
+.lightbox-close{
+  position:fixed;
+  top:24px;
+  right:24px;
+  width:44px;
+  height:44px;
+  border:1.4px solid var(--brass);
+  background:rgba(20,18,16,.75);
+  color:var(--bone);
+  font-family:'Quantico',sans-serif;
+  font-size:22px;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:201;
+  transition:background .3s ease, color .3s ease;
+}
+.lightbox-close:hover{
+  background:var(--brass);
+  color:var(--ink);
+}
+
+</style>
+</head>
+<body>
+
+<!-- Pull tab: fixed peg, always visible, click to unfurl / re-roll the menu -->
+<div class="menu-tab" id="menu-tab">
+  <div class="menu-tab-inner">
+    <span class="tab-glyph"></span>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- The rolled-up rug: travels right to "unroll" the flat panel behind it -->
+<div class="roll" id="roll">
+  <div class="roll-body"></div>
+</div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-inner">
+    <div class="sidebar-fringe top"></div>
+    <div class="sidebar-fringe bottom"></div>
+
+    <div class="sidebar-top">
+      <div class="rule"></div>
+    </div>
+
+    <nav>
+      <ul class="nav-about">
+        <li data-accent="brass">
+          <a href="index.html" class="nav-link active" data-accent-color="var(--brass)">
+            <span class="medallion"></span>
+            <span class="label-en">About</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-divider"></div>
+
+      <ul class="nav-works">
+        <li data-accent="red">
+          <a href="illustration.html" class="nav-link" data-accent-color="var(--rug-red)">
+            <span class="medallion"></span>
+            <span class="label-en">Hello Kitty: Unskinned</span>
+          </a>
+        </li>
+        <li data-accent="brass">
+          <a href="accessories.html" class="nav-link" data-accent-color="var(--brass)">
+            <span class="medallion"></span>
+            <span class="label-en">Chainmaille Handpiece</span>
+          </a>
+        </li>
+        <li data-accent="indigo">
+          <a href="photography.html" class="nav-link" data-accent-color="var(--indigo)">
+            <span class="medallion"></span>
+            <span class="label-en">Hands Study</span>
+          </a>
+        </li>
+        <li data-accent="red">
+          <a href="1212.html" class="nav-link" data-accent-color="var(--rug-red)">
+            <span class="medallion"></span>
+            <span class="label-en">1212</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="rule"></div>
+      Portfolio &mdash; 2026
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+
+    <article class="work-piece">
+
+        <!-- PASTE THE NAME OF YOUR PIECE HERE -->
+        <h2>[Title placeholder]</h2>
+        <h4>[Date placeholder]</h4>
+        <h4>[Medium placeholder]</h4>
+
+        <div class="accent-rule accent-rule-center" style="background:var(--brass);"></div>
+
+        <!-- Image on the left, video on the right — both are sized to the
+             same rendered height via matching max-height caps (see
+             .about-image / .about-video above). -->
+        <div class="images-gallery">
+            <div class="about-image-wrap">
+              <img class="about-image" src="media/wzuo12.jpg" alt="wzuo12 image placeholder">
+            </div>
+            <div class="about-image-wrap">
+              <video class="about-video" id="wzuo12-video" src="media/wzuo12.mp4" muted loop playsinline aria-label="wzuo12 video placeholder"></video>
+            </div>
+        </div>
+
+        <!-- PASTE YOUR ABSTRACT / DESCRIPTION HERE -->
+        <div class="work-description">
+            [Abstract placeholder — write your description here.]
+        </div>
+
+      </article>
+
+</main>
+
+<!-- Fullscreen image viewer: click the image to open, X (or Esc) to close -->
+<div class="lightbox-overlay" id="lightbox-overlay">
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close fullscreen image">&times;</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+
+
+/* ---------- UNFURLING 3D ROLL MENU ---------- */
+const sidebar = document.getElementById('sidebar');
+const roll = document.getElementById('roll');
+const menuTab = document.getElementById('menu-tab');
+const scrim = document.getElementById('scrim');
+let spinTimeout = null;
+
+function startSpin(){
+  roll.classList.add('spinning');
+  clearTimeout(spinTimeout);
+  // Match rollSpinX (mobile, .6s) / rollSpinY (desktop, .95s) durations
+  const spinDuration = window.innerWidth <= 768 ? 620 : 960;
+  spinTimeout = setTimeout(() => roll.classList.remove('spinning'), spinDuration);
+}
+
+/* On mobile the drawer's open height is content-based (not a fixed
+   viewport fraction), so measure the sidebar's actual rendered height
+   and feed it to the roll bar as its travel target — this keeps the
+   roll's stopping point locked to the rug's real bottom edge instead
+   of an guessed 82vh that can leave it floating past the content or
+   short of it. */
+function syncRollOpenTop(){
+  if (window.innerWidth > 768) return;
+  const inner = sidebar.querySelector('.sidebar-inner');
+  const maxH = window.innerHeight * 0.82;
+  const contentH = inner ? inner.scrollHeight : maxH;
+  const finalH = Math.min(contentH, maxH);
+  roll.style.setProperty('--roll-open-top', finalH + 'px');
+}
+
+function openMenu(){
+  syncRollOpenTop();
+  sidebar.classList.add('open');
+  roll.classList.add('open');
+  menuTab.classList.add('open');
+  scrim.classList.add('open');
+  startSpin();
+}
+function closeMenu(){
+  sidebar.classList.remove('open');
+  roll.classList.remove('open');
+  menuTab.classList.remove('open');
+  scrim.classList.remove('open');
+  startSpin();
+}
+function toggleMenu(){
+  if(sidebar.classList.contains('open')){ closeMenu(); } else { openMenu(); }
+}
+
+menuTab.addEventListener('click', toggleMenu);
+scrim.addEventListener('click', closeMenu);
+
+/* Menu starts closed on both desktop and mobile — the user opens it
+   via the pull tab rather than it unfurling automatically on load. */
+
+/* ---------- BACKGROUND VIDEO (muted, 20% slower, looping) ----------
+   Desktop autoplays it immediately. Mobile browsers (iOS Safari in
+   particular) routinely block autoplay even when muted, so on mobile
+   we instead surface native controls and let the viewer tap play
+   themselves rather than showing a silently-stuck black box. */
+const wzuoVideo = document.getElementById('wzuo12-video');
+if (wzuoVideo){
+  wzuoVideo.muted = true;
+  wzuoVideo.playbackRate = 0.8;
+  wzuoVideo.addEventListener('loadedmetadata', () => { wzuoVideo.playbackRate = 0.8; });
+  wzuoVideo.addEventListener('play', () => { wzuoVideo.playbackRate = 0.8; });
+
+  if (window.innerWidth > 768) {
+    wzuoVideo.play().catch(() => {});
+  } else {
+    wzuoVideo.controls = true;
+  }
+}
+
+/* ---------- IMAGE LIGHTBOX ---------- */
+const lightboxOverlay = document.getElementById('lightbox-overlay');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxClose = document.getElementById('lightbox-close');
+
+document.querySelectorAll('.about-image').forEach(img => {
+  img.addEventListener('click', () => {
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+    lightboxOverlay.classList.add('open');
+  });
+});
+
+function closeLightbox(){
+  lightboxOverlay.classList.remove('open');
+}
+lightboxClose.addEventListener('click', closeLightbox);
+lightboxOverlay.addEventListener('click', (e) => {
+  if (e.target === lightboxOverlay) { closeLightbox(); }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { closeLightbox(); }
+});
+</script>
+
+</body>
+</html>
