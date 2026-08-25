@@ -726,14 +726,8 @@ function toggleMenu(){
 menuTab.addEventListener('click', toggleMenu);
 scrim.addEventListener('click', closeMenu);
 
-/* unfurl open automatically on page load — desktop only.
-   On mobile the drop-down menu would cover the whole screen, so it
-   starts closed and the user taps the tab to open it. */
-window.addEventListener('load', () => {
-  if (window.innerWidth > 768) {
-    setTimeout(openMenu, 450);
-  }
-});
+/* Menu starts closed on both desktop and mobile — the user opens it
+   via the pull tab rather than it unfurling automatically on load. */
 
 /* ---------- IMAGE LIGHTBOX ---------- */
 const lightboxOverlay = document.getElementById('lightbox-overlay');
