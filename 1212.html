@@ -280,7 +280,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   background-attachment:fixed;
   display:flex;
   align-items:center;
-  padding:80px 100px 80px 140px;
+  padding:80px 60px 80px 140px;
   z-index:1;
 }
 
@@ -379,12 +379,49 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
    stretching to an equal-width box, so the border fits its actual
    aspect ratio rather than leaving mismatched empty padding. */
 .about-image-wrap {
+  position: relative;      /* anchors the video's fullscreen-expand button */
   flex: 0 1 auto;
   min-width: 0;            /* lets flex-shrink kick in if the row is too narrow */
   border: 1.4px solid var(--brass);
   padding: 6px;
   box-shadow: 0 12px 30px rgba(0,0,0,.4);
   background: rgba(236,228,210,.06);
+}
+
+/* Small fullscreen-expand affordance in the corner of the video frame —
+   kept separate from clicking the video itself so it never fights with
+   native play/pause controls. */
+.video-expand-btn{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border: 1.4px solid var(--brass);
+  background: rgba(20,18,16,.75);
+  color: var(--bone);
+  font-family:'Quantico',sans-serif;
+  font-size: 15px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  transition: background .3s ease, color .3s ease;
+}
+.video-expand-btn:hover{
+  background: var(--brass);
+  color: var(--ink);
+}
+
+/* ---------- VIDEO FULLSCREEN LIGHTBOX ---------- */
+.video-lightbox-slot{
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Image behavior — width is auto-derived from the height cap and the
@@ -394,7 +431,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   width: auto;
   height: auto;
   max-width: 100%;
-  max-height: min(44vh, 400px); /* Scales with viewport height so it never forces a scroll */
+  max-height: min(46vh, 420px); /* Scales with viewport height so it never forces a scroll */
   object-fit: contain;
   margin: 0 auto;
   cursor: zoom-in;
@@ -410,7 +447,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   width: auto;
   height: auto;
   max-width: 100%;
-  max-height: min(44vh, 400px);
+  max-height: min(46vh, 420px);
   object-fit: contain;
   margin: 0 auto;
 }
@@ -520,10 +557,10 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
     height:auto;
   }
   .about-image{
-    max-height:min(38vh, 420px);
+    max-height:min(44vh, 480px);
   }
   .about-video{
-    max-height:min(38vh, 420px);
+    max-height:min(44vh, 480px);
   }
 
   /* Side-by-side gallery stacks the image then the video on narrow
@@ -677,6 +714,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
             </div>
             <div class="about-image-wrap">
               <video class="about-video" id="wzuo12-video" src="media/wzuo12.mp4" muted loop playsinline aria-label="wzuo12 video placeholder"></video>
+              <button class="video-expand-btn" id="video-expand-btn" aria-label="View video fullscreen">&#9974;</button>
             </div>
         </div>
 
@@ -693,6 +731,14 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 <div class="lightbox-overlay" id="lightbox-overlay">
   <button class="lightbox-close" id="lightbox-close" aria-label="Close fullscreen image">&times;</button>
   <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- Fullscreen video viewer: tap the expand button to open, X (or Esc) to
+     close. The actual <video> element is moved in and back out (not
+     cloned) so playback/position/rate stay continuous. -->
+<div class="lightbox-overlay" id="video-lightbox-overlay">
+  <button class="lightbox-close" id="video-lightbox-close" aria-label="Close fullscreen video">&times;</button>
+  <div class="video-lightbox-slot" id="video-lightbox-slot"></div>
 </div>
 
 <script>
@@ -753,23 +799,61 @@ scrim.addEventListener('click', closeMenu);
 /* Menu starts closed on both desktop and mobile — the user opens it
    via the pull tab rather than it unfurling automatically on load. */
 
-/* ---------- BACKGROUND VIDEO (muted, 20% slower, looping) ----------
+/* ---------- BACKGROUND VIDEO (muted, 40% slower, looping) ----------
    Desktop autoplays it immediately. Mobile browsers (iOS Safari in
    particular) routinely block autoplay even when muted, so on mobile
    we instead surface native controls and let the viewer tap play
    themselves rather than showing a silently-stuck black box. */
 const wzuoVideo = document.getElementById('wzuo12-video');
+const wzuoVideoDefaultControls = window.innerWidth <= 768;
 if (wzuoVideo){
   wzuoVideo.muted = true;
-  wzuoVideo.playbackRate = 0.8;
-  wzuoVideo.addEventListener('loadedmetadata', () => { wzuoVideo.playbackRate = 0.8; });
-  wzuoVideo.addEventListener('play', () => { wzuoVideo.playbackRate = 0.8; });
+  wzuoVideo.playbackRate = 0.6;
+  wzuoVideo.addEventListener('loadedmetadata', () => { wzuoVideo.playbackRate = 0.6; });
+  wzuoVideo.addEventListener('play', () => { wzuoVideo.playbackRate = 0.6; });
 
   if (window.innerWidth > 768) {
     wzuoVideo.play().catch(() => {});
   } else {
     wzuoVideo.controls = true;
   }
+}
+
+/* ---------- VIDEO FULLSCREEN LIGHTBOX ----------
+   The expand button is separate from the video itself so it never
+   fights with native play/pause controls. The actual <video> node is
+   moved into the overlay (not cloned) so playback position and rate
+   carry over untouched, then moved back out on close. Native controls
+   give pause/play (and a scrubber) while it's fullscreen; the brass X
+   matches the image lightbox's close affordance. */
+const videoExpandBtn = document.getElementById('video-expand-btn');
+const videoLightboxOverlay = document.getElementById('video-lightbox-overlay');
+const videoLightboxClose = document.getElementById('video-lightbox-close');
+const videoLightboxSlot = document.getElementById('video-lightbox-slot');
+const videoHomeWrap = wzuoVideo ? wzuoVideo.parentElement : null;
+
+function openVideoLightbox(){
+  if (!wzuoVideo) return;
+  videoLightboxSlot.appendChild(wzuoVideo);
+  wzuoVideo.style.maxWidth = '85vw';
+  wzuoVideo.style.maxHeight = '85vh';
+  wzuoVideo.controls = true;
+  videoLightboxOverlay.classList.add('open');
+}
+function closeVideoLightbox(){
+  if (!wzuoVideo || !videoLightboxOverlay.classList.contains('open')) return;
+  videoLightboxOverlay.classList.remove('open');
+  videoHomeWrap.insertBefore(wzuoVideo, videoHomeWrap.firstChild);
+  wzuoVideo.style.maxWidth = '';
+  wzuoVideo.style.maxHeight = '';
+  wzuoVideo.controls = wzuoVideoDefaultControls;
+}
+if (videoExpandBtn){
+  videoExpandBtn.addEventListener('click', openVideoLightbox);
+  videoLightboxClose.addEventListener('click', closeVideoLightbox);
+  videoLightboxOverlay.addEventListener('click', (e) => {
+    if (e.target === videoLightboxOverlay) { closeVideoLightbox(); }
+  });
 }
 
 /* ---------- IMAGE LIGHTBOX ---------- */
@@ -793,7 +877,7 @@ lightboxOverlay.addEventListener('click', (e) => {
   if (e.target === lightboxOverlay) { closeLightbox(); }
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') { closeLightbox(); }
+  if (e.key === 'Escape') { closeLightbox(); closeVideoLightbox(); }
 });
 </script>
 
