@@ -225,10 +225,25 @@ nav a{
 
 nav a .medallion{
   flex:none;
-  width:20px;height:20px;
+  width:12px;height:12px;
+  box-sizing:border-box;
   transform:rotate(45deg);
   border:1.4px solid var(--brass);
-  transition:background .35s ease, box-shadow .35s ease, transform .5s ease;
+  position:relative;
+  overflow:hidden;
+  transition:background .35s ease, box-shadow .35s ease;
+}
+
+nav a .medallion::after{
+  content:'';
+  position:absolute;
+  top:-60%;
+  left:-160%;
+  width:70%;
+  height:220%;
+  background:linear-gradient(75deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,.95) 50%, rgba(255,255,255,0) 70%, transparent 100%);
+  opacity:0;
+  pointer-events:none;
 }
 
 nav a .label-en{
@@ -249,8 +264,17 @@ nav li[data-accent="brass"] a.active .medallion{background:var(--brass);box-shad
 nav li[data-accent="indigo"] a:hover .medallion,
 nav li[data-accent="indigo"] a.active .medallion{background:var(--indigo);box-shadow:0 0 14px rgba(46,58,88,.9);border-color:#7683ab;}
 
-nav a:hover .medallion{transform:rotate(225deg);}
-nav a.active .medallion{transform:rotate(225deg);}
+nav a:hover .medallion::after,
+nav a.active .medallion::after{
+  animation:medallionGlint .8s ease;
+}
+
+@keyframes medallionGlint{
+  0%   { left:-160%; opacity:0; }
+  12%  { opacity:1; }
+  55%  { opacity:1; }
+  100% { left:160%; opacity:0; }
+}
 
 nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 
