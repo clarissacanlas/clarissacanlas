@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>1212</title>
+<title>Photography</title>
 <link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32.png">
 <link rel="icon" type="image/png" sizes="48x48" href="media/favicon-48.png">
@@ -277,7 +277,9 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   background-position:center;
   background-attachment:fixed;
   display:flex;
+  flex-direction:column;
   align-items:center;
+  gap:110px;
   padding:80px 60px 80px 140px;
   z-index:1;
 }
@@ -448,6 +450,72 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   max-height: min(46vh, 420px);
   object-fit: contain;
   margin: 0 auto;
+}
+
+/* ---------- PAIRED-PHOTO CAROUSEL ----------
+   For a project with more photos than fit as one row: arrows step
+   through a series of "slides", each slide reusing .images-gallery's
+   layout for 1 or 2 photos. Only the active slide is displayed. */
+.pair-carousel{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  width:100%;
+  margin-bottom:14px;
+}
+
+.pair-viewport{
+  flex:1;
+  min-width:0;
+  overflow:hidden;
+}
+
+.pair-slide{
+  display:none;
+}
+.pair-slide.is-active{
+  display:flex;
+}
+
+.pair-nav-btn{
+  flex:none;
+  width:38px;
+  height:38px;
+  border:1.4px solid var(--brass);
+  background:rgba(20,18,16,.75);
+  color:var(--bone);
+  font-family:'Quantico',sans-serif;
+  font-size:16px;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:background .3s ease, color .3s ease;
+}
+.pair-nav-btn:hover{
+  background:var(--brass);
+  color:var(--ink);
+}
+
+.pair-indicator{
+  text-align:center;
+  font-family:'Quantico',sans-serif;
+  font-size:12px;
+  letter-spacing:.08em;
+  color:var(--bone-dim);
+  margin-bottom:34px;
+}
+
+.work-description{
+  font-family:'Quantico',sans-serif;
+  font-weight:300;
+  font-size:18px;
+  line-height:1.75;
+  color:var(--bone-dim);
+  text-align:center;
+  max-width:60ch;
+  margin:0 auto;
 }
 
 .about-desc{
@@ -679,7 +747,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
         <li data-accent="brass">
           <a href="1212.html" class="nav-link" data-accent-color="var(--brass)">
             <span class="medallion"></span>
-            <span class="label-en">1212</span>
+            <span class="label-en">Photography</span>
           </a>
         </li>
       </ul>
@@ -693,6 +761,55 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 </aside>
 
 <main class="main">
+
+    <article class="work-piece">
+
+        <h2>ajsk</h2>
+        <h4>May 2021 - August 2022</h4>
+        <h4>Olympus Zoom80 35mm, Fujicolor Superia400, and Adobe Lightroom</h4>
+
+        <div class="accent-rule accent-rule-center" style="background:var(--brass);"></div>
+
+        <div class="pair-carousel" data-carousel>
+          <button class="pair-nav-btn pair-prev" type="button" aria-label="Previous photos">&#10094;</button>
+
+          <div class="pair-viewport">
+            <div class="images-gallery pair-slide is-active" data-slide-index="0">
+              <div class="about-image-wrap"><img class="about-image" src="media/ajsk1.jpg" alt="ajsk 1"></div>
+              <div class="about-image-wrap"><img class="about-image" src="media/ajsk9.JPG" alt="ajsk 9"></div>
+            </div>
+            <div class="images-gallery pair-slide" data-slide-index="1">
+              <div class="about-image-wrap"><img class="about-image" src="media/ajsk3.jpg" alt="ajsk 3"></div>
+            </div>
+            <div class="images-gallery pair-slide" data-slide-index="2">
+              <div class="about-image-wrap"><img class="about-image" src="media/ajsk4.jpg" alt="ajsk 4"></div>
+              <div class="about-image-wrap"><img class="about-image" src="media/ajsk5.jpg" alt="ajsk 5"></div>
+            </div>
+            <div class="images-gallery pair-slide" data-slide-index="3">
+              <div class="about-image-wrap"><img class="about-image" src="media/ajsk7.JPG" alt="ajsk 7"></div>
+              <div class="about-image-wrap"><img class="about-image" src="media/ajsk6.jpg" alt="ajsk 6"></div>
+            </div>
+            <div class="images-gallery pair-slide" data-slide-index="4">
+              <div class="about-image-wrap"><img class="about-image" src="media/ajsk10.JPG" alt="ajsk 10"></div>
+            </div>
+            <div class="images-gallery pair-slide" data-slide-index="5">
+              <div class="about-image-wrap"><img class="about-image" src="media/ajsk8.JPG" alt="ajsk 8"></div>
+            </div>
+            <div class="images-gallery pair-slide" data-slide-index="6">
+              <div class="about-image-wrap"><img class="about-image" src="media/ajsk11.JPG" alt="ajsk 11"></div>
+            </div>
+          </div>
+
+          <button class="pair-nav-btn pair-next" type="button" aria-label="Next photos">&#10095;</button>
+        </div>
+
+        <div class="pair-indicator"><span class="pair-indicator-current">1</span> / <span class="pair-indicator-total">7</span></div>
+
+        <div class="work-description">
+            Hometown memoirs.
+        </div>
+
+      </article>
 
     <article class="work-piece">
 
@@ -853,6 +970,33 @@ if (videoExpandBtn){
     if (e.target === videoLightboxOverlay) { closeVideoLightbox(); }
   });
 }
+
+/* ---------- PAIRED-PHOTO CAROUSEL (prev/next through grouped images) ----------
+   Generic: works for any .pair-carousel with a matching .pair-indicator
+   as its next sibling, so future projects can reuse the same markup. */
+document.querySelectorAll('[data-carousel]').forEach(carousel => {
+  const slides = Array.from(carousel.querySelectorAll('.pair-slide'));
+  const prevBtn = carousel.querySelector('.pair-prev');
+  const nextBtn = carousel.querySelector('.pair-next');
+  const indicator = carousel.nextElementSibling && carousel.nextElementSibling.classList.contains('pair-indicator')
+    ? carousel.nextElementSibling
+    : null;
+  const currentEl = indicator ? indicator.querySelector('.pair-indicator-current') : null;
+  const totalEl = indicator ? indicator.querySelector('.pair-indicator-total') : null;
+  let index = 0;
+
+  function show(i){
+    index = (i + slides.length) % slides.length;
+    slides.forEach((slide, si) => slide.classList.toggle('is-active', si === index));
+    if (currentEl) currentEl.textContent = index + 1;
+  }
+
+  if (totalEl) totalEl.textContent = slides.length;
+  show(0);
+
+  if (prevBtn) prevBtn.addEventListener('click', () => show(index - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => show(index + 1));
+});
 
 /* ---------- IMAGE LIGHTBOX ---------- */
 const lightboxOverlay = document.getElementById('lightbox-overlay');
