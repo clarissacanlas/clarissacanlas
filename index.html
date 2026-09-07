@@ -335,7 +335,8 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 /* ---------- ABOUT PANEL ---------- */
 .panel-about{
   text-align:left;
-  max-width:1100px;
+  width:100%;
+  max-width:none;
   margin:0;
 }
 
@@ -385,7 +386,6 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 .panel-about .about-content .about-desc{
   flex:1;
   min-width:280px;
-  max-width:62ch;
 }
 
 .about-contact{
@@ -718,7 +718,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
           <span class="contact-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg>
           </span>
-          @mangomikeschucklehut
+          My Instagram
         </a>
       </div>
     </div>
@@ -753,9 +753,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   const host = 'ucsb.edu';
   const addr = user + String.fromCharCode(64) + host;
   const link = document.getElementById('email-contact-link');
-  const text = document.getElementById('email-contact-text');
   if (link) link.href = 'mailto:' + addr;
-  if (text) text.textContent = addr;
 })();
 
 /* ---------- UNFURLING 3D ROLL MENU ---------- */
