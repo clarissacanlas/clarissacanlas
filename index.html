@@ -334,9 +334,9 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 
 /* ---------- ABOUT PANEL ---------- */
 .panel-about{
-  text-align:center;
-  max-width:560px;
-  margin:0 auto;
+  text-align:left;
+  max-width:760px;
+  margin:0;
 }
 
 .about-name{
@@ -346,19 +346,23 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   font-size:clamp(40px,5vw,64px);
   line-height:1.05;
   color:var(--bone);
-  margin-bottom:16px;
+  margin-bottom:32px;
+  white-space:nowrap;
 }
 
-.accent-rule-center{
-  margin-left:auto;
-  margin-right:auto;
+.about-content{
+  display:flex;
+  align-items:flex-start;
+  gap:44px;
+  margin-bottom:44px;
 }
 
 .about-image-wrap{
   aspect-ratio:1/1;
   width:auto;
-  height:min(26vh, 335px);
-  margin:0 auto 22px;
+  height:min(52vh, 670px);
+  flex:none;
+  margin:0;
   border:1.4px solid var(--brass);
   padding:6px;
   box-shadow:0 12px 30px rgba(0,0,0,.4);
@@ -373,8 +377,51 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 }
 
 .about-desc{
-  margin:0 auto;
+  margin:0;
+  text-align:left;
+  padding-top:6px;
 }
+
+.about-contact{
+  text-align:left;
+}
+
+.about-contact-title{
+  font-family:'Quantico',sans-serif;
+  font-weight:400;
+  font-style:italic;
+  font-size:24px;
+  color:var(--bone);
+  margin:0 0 16px;
+}
+
+.about-contact-links{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.contact-link{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  color:var(--bone-dim);
+  text-decoration:none;
+  font-family:'Quantico',sans-serif;
+  font-weight:300;
+  font-size:16px;
+  transition:color .3s ease;
+  width:fit-content;
+}
+.contact-link:hover{ color:var(--brass); }
+
+.contact-icon{
+  width:18px;height:18px;
+  flex:none;
+  display:inline-flex;
+  color:var(--brass);
+}
+.contact-icon svg{ width:100%; height:100%; }
 
 /* ================= MOBILE LAYOUT (auto-detected via viewport width) =================
    Below this breakpoint the menu drops down from the TOP of the screen instead of
@@ -468,10 +515,38 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   }
   .panel{ max-width:100%; }
 
+  .panel-about{
+    text-align:center;
+    margin:0 auto;
+  }
+
+  .about-name{
+    white-space:normal;
+  }
+
+  .about-content{
+    flex-direction:column;
+    align-items:center;
+    gap:24px;
+  }
+
   .about-image-wrap{
     width:100%;
     max-width:460px;
     height:auto;
+  }
+
+  .about-desc{
+    text-align:center;
+    padding-top:0;
+  }
+
+  .about-contact{
+    text-align:center;
+  }
+
+  .about-contact-links{
+    align-items:center;
   }
 }
 
@@ -607,20 +682,39 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   <!-- ===== ABOUT / HOME PANEL ===== -->
   <div class="panel panel-about" id="panel-about">
 
-    <!-- 1) PASTE YOUR NAME HERE (replace "Your Name") -->
+    <!-- 1) NAME -->
     <h1 class="about-name" id="about-name">Clarissa Canlas</h1>
 
-    <div class="accent-rule accent-rule-center" style="background:var(--brass);"></div>
+    <div class="about-content">
+      <!-- 2) PHOTO -->
+      <div class="about-image-wrap">
+        <img id="about-image" class="about-image" src="media/selfie.jpg" alt="Clarissa Canlas">
+      </div>
 
-    <!-- 2) PASTE YOUR IMAGE HERE — replace the src="" below with your image path -->
-    <div class="about-image-wrap">
-      <img id="about-image" class="about-image" src="media/selfie.jpg" alt="Your Name">
+      <!-- 3) BIOGRAPHY -->
+      <p class="copy about-desc" id="about-desc">
+        Welcome to my portfolio website. I double major in Data Science and Computational Linguistics at the University of California, Santa Barbara. This summer, I am currently doing the Media Arts and Technology minor, and this is my project for the capstone.
+      </p>
     </div>
 
-    <!-- 3) PASTE YOUR DESCRIPTION HERE (replace the paragraph text below) -->
-    <p class="copy about-desc" id="about-desc">
-      Welcome to my portfolio website. I am currently doing the Media Arts and Technology minor at UCSB, and this is my project for the capstone. I am also double majoring in Data Science and Copmutational Linguistics, and this is the start of my creative pursuits!
-    </p>
+    <!-- 4) CONTACT -->
+    <div class="about-contact">
+      <h2 class="about-contact-title">Contact me!</h2>
+      <div class="about-contact-links">
+        <a class="contact-link" href="mailto:clarissacanlas@ucsb.edu">
+          <span class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </span>
+          clarissacanlas@ucsb.edu
+        </a>
+        <a class="contact-link" href="https://instagram.com/mangomikeschucklehut" target="_blank" rel="noopener">
+          <span class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg>
+          </span>
+          @mangomikeschucklehut
+        </a>
+      </div>
+    </div>
   </div>
 
   <!-- ===== WORK PANEL (Illustration / Accessories / Photography) ===== -->
