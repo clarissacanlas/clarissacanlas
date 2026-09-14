@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Photography</title>
+<title>Eggscape</title>
 <link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32.png">
 <link rel="icon" type="image/png" sizes="48x48" href="media/favicon-48.png">
@@ -278,7 +278,7 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   background-attachment:fixed;
   display:flex;
   align-items:center;
-  padding:80px 100px 80px 140px;
+  padding:80px 192px 80px 140px;
   z-index:1;
 }
 
@@ -354,43 +354,60 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   margin-right:auto;
 }
 
-/* Container: Forces single-row alignment */
-.images-gallery {
-  display: flex;
-  flex-wrap: nowrap;      /* STRICTLY prevents dropping to a second row */
-  justify-content: center;
-  align-items: center;    /* Vertically aligns different aspect ratios */
-  gap: 16px;              /* Space between images */
-  width: 100%;
-  margin-bottom: 34px;
-}
-
-/* Individual Frame — hugs each image's own rendered size instead of
-   stretching to an equal-width box, so the border fits each photo's
-   actual aspect ratio rather than leaving mismatched empty padding. */
-.about-image-wrap {
-  flex: 0 1 auto;
-  min-width: 0;            /* lets flex-shrink kick in if the row is too narrow */
-  border: 1.4px solid var(--brass);
-  padding: 6px;
-  box-shadow: 0 12px 30px rgba(0,0,0,.4);
-  background: rgba(236,228,210,.06);
-}
-
-/* Image Behavior — width is auto-derived from the height cap and the
-   image's own intrinsic aspect ratio, so the frame hugs the image. */
-.about-image {
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: min(48vh, 560px); /* Scales with viewport height so it never forces a scroll */
-  object-fit: contain;
-  margin: 0 auto;
-}
-
 .about-desc{
   margin:0 auto;
+}
+
+/* ---------- WORK PIECE: video left, description right (desktop) ---------- */
+.work-piece .accent-rule{
+  display:none;
+}
+
+.work-piece{
+  width:100%;
+}
+
+.work-media-row{
+  display:flex;
+  align-items:flex-start;
+  gap:48px;
+}
+
+/* Desktop only: vertically center the description against the video */
+@media (min-width:769px){
+  .work-media-row{
+    align-items:center;
+  }
+}
+
+.about-video-wrap{
+  aspect-ratio:16/9;
+  width:min(50vw, 640px);
+  height:auto;
+  margin:0;
+  flex:none;
+  border:1.4px solid var(--brass);
+  padding:6px;
+  box-shadow:0 12px 30px rgba(0,0,0,.4);
+  background:rgba(236,228,210,.06);
+}
+
+.about-video-frame{
+  width:100%;
+  height:100%;
+  display:block;
+  border:0;
+}
+
+.work-description{
+  flex:1;
+  min-width:0;
+  text-align:left;
+  font-family:'Quantico',sans-serif;
+  font-weight:300;
+  font-size:18px;
+  line-height:1.75;
+  color:var(--bone);
 }
 
 /* ================= MOBILE LAYOUT (auto-detected via viewport width) =================
@@ -485,77 +502,16 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
   }
   .panel{ max-width:100%; }
 
-  /* Wrap hugs each image's own rendered size (no forced full-width
-     box) so the border fits the photo instead of leaving empty
-     padding on the sides */
-  .about-image-wrap{
-    width:auto;
-    max-width:100%;
+  .about-video-wrap{
+    width:100%;
+    max-width:560px;
     height:auto;
   }
-  .about-image{
-    max-height:min(42vh, 480px);
-  }
 
-  /* Photography's side-by-side gallery stacks one image after another
-     on narrow screens instead of sitting side by side */
-  .images-gallery{
-    flex-direction:column;
-    align-items:center;
-  }
-}
-
-/* ---------- IMAGE LIGHTBOX (click any image for a fullscreen view) ---------- */
-.about-image{
-  cursor: zoom-in;
-}
-
-.lightbox-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(6,5,4,.92);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:60px;
-  z-index:200;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .3s ease;
-}
-.lightbox-overlay.open{
-  opacity:1;
-  pointer-events:auto;
-}
-.lightbox-overlay img{
-  max-width:100%;
-  max-height:100%;
-  object-fit:contain;
-  box-shadow:0 20px 60px rgba(0,0,0,.6);
-  cursor:default;
-}
-.lightbox-close{
-  position:fixed;
-  top:24px;
-  right:24px;
-  width:44px;
-  height:44px;
-  border:1.4px solid var(--brass);
-  background:rgba(20,18,16,.75);
-  color:var(--bone);
-  font-family:'Quantico',sans-serif;
-  font-size:22px;
-  line-height:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  z-index:201;
-  transition:background .3s ease, color .3s ease;
-}
-.lightbox-close:hover{
-  background:var(--brass);
-  color:var(--ink);
+  /* Desktop-only video-left/text-right row collapses back to stacked
+     video-then-text on mobile */
+  .work-piece{ max-width:100%; }
+  .work-media-row{ flex-direction:column; }
 }
 
 </style>
@@ -642,45 +598,26 @@ nav a:hover .label-en, nav a.active .label-en{color:var(--brass);}
 
     <article class="work-piece">
 
-        <!-- PASTE THE NAME OF YOUR PIECE HERE -->
-        <h2>Hands Study</h2>
-        <h4>June 2025</h4>
-        <h4>Watercolor, fineliner pens, and colored pencil</h4>
-        <h4>iPhone 12 camera, fisheye lens clip, Adobe Lightroom</h4>
+        <h2>Eggscape</h2>
+        <h4>August 2026</h4>
+        <h4>VR video game made with Unity</h4>
 
         <div class="accent-rule accent-rule-center" style="background:var(--brass);"></div>
-  
-        <!-- PASTE YOUR IMAGE PATH INTO src="".
-             Example: src="media/illustration/drawing1.jpg"
-             -->
 
-    <div class="images-gallery">
-        <div class="about-image-wrap">
-          <img class="about-image" src="media/canlas_hands_01.jpeg" alt="colorful distorted illustration">
+        <div class="work-media-row">
+          <div class="about-video-wrap">
+            <iframe class="about-video-frame" src="https://drive.google.com/file/d/1r33cm-0vQsqZKstWp8E7IuIiP6Sz8gsi/preview" allow="autoplay" allowfullscreen title="Eggscape gameplay video"></iframe>
+          </div>
+
+          <!-- PASTE YOUR DESCRIPTION HERE -->
+          <div class="work-description">
+            Eggscape is a VR video game built in Unity.
+          </div>
         </div>
-        <div class="about-image-wrap">
-          <img class="about-image" src="media/canlas_hands_02.JPEG" alt="colorful distorted photo">
-        </div>
-      </div>
-  
-        <!-- NORMAL DESCRIPTION UNDER THE IMAGE -->
-        <div class="work-description">
-            These joint pieces culminate in a project centered on self-portraiture. The depicted hands are my own, 
-            with the intention of conveying my interiority through my exteriority. Since childhood, I've had the 
-            bad habit of picking at my nails when feeling anxious, and I sought to capture the weird/distorted nature 
-            of my damaged fingers. In both realms of photography and illustration, realism was not my priority; moreso 
-            the process focused on explorations in color and shape.
-        </div>
-  
+
       </article>
 
 </main>
-
-<!-- Fullscreen image viewer: click any image to open, X (or Esc) to close -->
-<div class="lightbox-overlay" id="lightbox-overlay">
-  <button class="lightbox-close" id="lightbox-close" aria-label="Close fullscreen image">&times;</button>
-  <img id="lightbox-img" src="" alt="">
-</div>
 
 <script>
 
@@ -739,30 +676,6 @@ scrim.addEventListener('click', closeMenu);
 
 /* Menu starts closed on both desktop and mobile — the user opens it
    via the pull tab rather than it unfurling automatically on load. */
-
-/* ---------- IMAGE LIGHTBOX ---------- */
-const lightboxOverlay = document.getElementById('lightbox-overlay');
-const lightboxImg = document.getElementById('lightbox-img');
-const lightboxClose = document.getElementById('lightbox-close');
-
-document.querySelectorAll('.about-image').forEach(img => {
-  img.addEventListener('click', () => {
-    lightboxImg.src = img.src;
-    lightboxImg.alt = img.alt;
-    lightboxOverlay.classList.add('open');
-  });
-});
-
-function closeLightbox(){
-  lightboxOverlay.classList.remove('open');
-}
-lightboxClose.addEventListener('click', closeLightbox);
-lightboxOverlay.addEventListener('click', (e) => {
-  if (e.target === lightboxOverlay) { closeLightbox(); }
-});
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') { closeLightbox(); }
-});
 </script>
 
 </body>
